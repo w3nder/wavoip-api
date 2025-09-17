@@ -24,7 +24,11 @@ export class Audio {
             return;
         }
 
-        await this.audio_context.audioWorklet.addModule(new URL("./AudioWorklet.js", import.meta.url));
+        const audioWorkletUrl = typeof import.meta !== 'undefined' && import.meta.url
+            ? new URL("./AudioWorklet.js", import.meta.url).href
+            : "./AudioWorklet.js";
+
+        await this.audio_context.audioWorklet.addModule(audioWorkletUrl);
 
         this.playback_node = new AudioWorkletNode(this.audio_context, "audio-data-worklet-stream", {
             numberOfInputs: 1,

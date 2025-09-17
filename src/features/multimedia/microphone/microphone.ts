@@ -34,7 +34,11 @@ export class Microphone {
         }
         const mic_source = this.audio_context.createMediaStreamSource(this.mic_stream);
 
-        await this.audio_context.audioWorklet.addModule(new URL("./AudioWorkletMic.js", import.meta.url));
+        const audioWorkletUrl = typeof import.meta !== 'undefined' && import.meta.url
+            ? new URL("./AudioWorkletMic.js", import.meta.url).href
+            : "./AudioWorkletMic.js";
+
+        await this.audio_context.audioWorklet.addModule(audioWorkletUrl);
 
         this.resample_node = new AudioWorkletNode(this.audio_context, "resample-processor", {
             processorOptions: { sampleRate: this.audio_context.sampleRate },
